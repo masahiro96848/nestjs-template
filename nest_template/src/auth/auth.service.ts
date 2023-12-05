@@ -4,10 +4,15 @@ import { SignInUserDto } from '@/auth/dto/sign-in-user.dto'
 import * as bcrypt from 'bcrypt'
 import { ResponseUserType } from '@/types/User'
 import { SignUpUserDto } from '@/auth/dto/sign-up-user.dto'
+import { JwtPayload } from '@/types/jwt-payload'
+import { JwtService } from '@nestjs/jwt'
 
 @Injectable()
 export class AuthService {
-  constructor(private prisma: PrismaService) {}
+  constructor(
+    private prisma: PrismaService,
+    private readonly jwtSecret: JwtService,
+  ) {}
 
   /**
    * ログイン
@@ -37,8 +42,14 @@ export class AuthService {
       updatedAt: user.updatedAt,
     }
 
+    const payload: JwtPayload = {
+      userId: user.id,
+      email: user.email,
+    }
+
     return {
       user: resUser,
+      access_token: this.jwtSecret.sign(payload), // jwtのアクセストークンを作成し返却
     }
   }
 
@@ -76,8 +87,42 @@ export class AuthService {
       updatedAt: createdUser.updatedAt,
     }
 
+    const payload: JwtPayload = {
+      userId: createdUser.id,
+      email: createdUser.email,
+    }
+
     return {
       user: resUser,
+      accessToken: this.jwtSecret.sign(payload), // jwtアクセストークンを作成し返却
+    }
+  }
+
+  async authCheck(userId: number) {
+    const user = await this.prisma.user.findFirst({
+      where: {
+        id: userId,
+      },
+    })
+
+    if (!user) throw new UnauthorizedException('認証データが存在しません。')
+
+    const resUser: ResponseUserType = {
+      id: user.id,
+      name: user.name,
+      email: user.email,
+      createdAt: user.createdAt,
+      updatedAt: user.updatedAt,
+    }
+
+    const payload: JwtPayload = {
+      userId: user.id,
+      email: user.email,
+    }
+
+    return {
+      user: resUser,
+      accessToken: this.jwtSecret.sign(payload), // jwtアクセストークンを作成し返却
     }
   }
 }
