@@ -1,6 +1,6 @@
 import { Injectable, UnauthorizedException } from '@nestjs/common'
-import { PrismaService } from '@/service/prisma.service'
-import { SignInUserDto } from '@/dto/sign-in-user.dto'
+import { PrismaService } from '@/prisma.service'
+import { SignInUserDto } from '@/auth/dto/sign-in-user.dto'
 import * as bcrypt from 'bcrypt'
 import { ResponseUserType } from '@/types/User'
 
@@ -10,7 +10,8 @@ export class AuthService {
 
   /**
    * ログイン
-   *
+   * @param signInUserDto
+   * @returns
    */
   async signIn(signInUserDto: SignInUserDto) {
     const user = await this.prisma.user.findFirst({
@@ -36,7 +37,7 @@ export class AuthService {
     }
 
     return {
-      resUser,
+      user: resUser,
     }
   }
 }
