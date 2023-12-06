@@ -4,19 +4,19 @@ import * as bcrypt from 'bcrypt'
 const userData: Array<Omit<User, 'createdAt' | 'updatedAt'>> = [
   {
     id: 1,
-    name: 'taro',
+    nickname: 'taro',
     email: 'sample1@test.com',
     password: '',
   },
   {
     id: 2,
-    name: 'jiro',
+    nickname: 'jiro',
     email: 'sample2@test.com',
     password: '',
   },
   {
     id: 3,
-    name: 'hanako',
+    nickname: 'hanako',
     email: 'sample3@test.com',
     password: '',
   },

@@ -36,7 +36,7 @@ export class AuthService {
     }
     const resUser: ResponseUserType = {
       id: user.id,
-      name: user.name,
+      nickname: user.nickname,
       email: user.email,
       createdAt: user.createdAt,
       updatedAt: user.updatedAt,
@@ -49,7 +49,7 @@ export class AuthService {
 
     return {
       user: resUser,
-      access_token: this.jwtSecret.sign(payload), // jwtのアクセストークンを作成し返却
+      accessToken: this.jwtSecret.sign(payload), // jwtのアクセストークンを作成し返却
     }
   }
 
@@ -73,7 +73,7 @@ export class AuthService {
     const hashPassword = await bcrypt.hash(signUpUserDto.password, 10)
     const createdUser = await this.prisma.user.create({
       data: {
-        name: signUpUserDto.name,
+        nickname: signUpUserDto.nickname,
         email: signUpUserDto.email,
         password: hashPassword,
       },
@@ -81,7 +81,7 @@ export class AuthService {
 
     const resUser: ResponseUserType = {
       id: createdUser.id,
-      name: createdUser.name,
+      nickname: createdUser.nickname,
       email: createdUser.email,
       createdAt: createdUser.createdAt,
       updatedAt: createdUser.updatedAt,
@@ -109,7 +109,7 @@ export class AuthService {
 
     const resUser: ResponseUserType = {
       id: user.id,
-      name: user.name,
+      nickname: user.nickname,
       email: user.email,
       createdAt: user.createdAt,
       updatedAt: user.updatedAt,
